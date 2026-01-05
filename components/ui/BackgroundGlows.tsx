@@ -19,7 +19,7 @@ export default function BackgroundGlows({
 }: BackgroundGlowsProps) {
   
   return (
-    <View style={[styles.container, style]} pointerEvents="none">
+    <View style={[styles.container, style, { pointerEvents: "none" } as any]}>
       {top && <View style={styles.glowTop} />}
       {bottom && <View style={styles.glowBottom} />}
       {topLeft && <View style={styles.glowTopLeft} />}

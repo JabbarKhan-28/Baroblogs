@@ -279,9 +279,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
     elevation: 8,
-    shadowColor: COLORS.textHighlight,
-    shadowOpacity: 0.4,
-    shadowRadius: 10,
+    elevation: 8,
+    ...Platform.select({
+        web: {
+            boxShadow: `0 0 20px ${COLORS.textHighlight}66`, // 0.4 opacity approx
+        } as any,
+        default: {
+            shadowColor: COLORS.textHighlight,
+            shadowOffset: { width: 0, height: 4 }, // Added offset which was missing/implicit? actually standard shadow usually has offset.
+            shadowOpacity: 0.4,
+            shadowRadius: 10,
+        }
+    })
   },
   loginButtonText: {
     color: COLORS.primaryBg,

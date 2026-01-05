@@ -19,14 +19,14 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { collection, deleteDoc, doc, increment, onSnapshot, orderBy, query, updateDoc } from "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  ActivityIndicator,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
+    ActivityIndicator,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -388,9 +388,16 @@ const styles = StyleSheet.create({
     color: COLORS.textPrim,
     textAlign: "center",
     letterSpacing: -1,
-    textShadowColor: 'rgba(56, 189, 248, 0.3)',
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 10,
+    ...Platform.select({
+        web: {
+            textShadow: '0 2px 10px rgba(56, 189, 248, 0.3)'
+        } as any,
+        default: {
+            textShadowColor: 'rgba(56, 189, 248, 0.3)',
+            textShadowOffset: { width: 0, height: 2 },
+            textShadowRadius: 10,
+        }
+    })
   },
   webHeader: {
     fontSize: 36, // Slightly larger for desktop but consistent

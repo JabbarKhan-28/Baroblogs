@@ -62,10 +62,17 @@ export default function BlogCard({ blog, user, onPress, onDelete, onEdit, isMobi
                  boxShadow: 'none',
                  backdropFilter: 'none',
                  transition: 'none',
-                 shadowColor: COLORS.textHighlight,
-                 shadowOffset: { width: 0, height: 10 },
-                 shadowOpacity: 0.2,
-                 shadowRadius: 20,
+                 ...Platform.select({
+                    web: {
+                        boxShadow: `0 10px 20px ${COLORS.textHighlight}33`, // 0.2 opacity approx
+                    } as any,
+                    default: {
+                        shadowColor: COLORS.textHighlight,
+                        shadowOffset: { width: 0, height: 10 },
+                         shadowOpacity: 0.2,
+                        shadowRadius: 20,
+                    }
+                 })
             } as any
           ]}>
               {Platform.OS !== 'web' && (
@@ -200,11 +207,17 @@ const styles = StyleSheet.create({
       paddingHorizontal: 28, 
       borderRadius: 20,
       width: '100%',
-      shadowColor: COLORS.textHighlight,
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
+      ...Platform.select({
+          web: {
+              boxShadow: `0 4px 8px ${COLORS.textHighlight}4D`,
+          } as any,
+          default: {
+                shadowColor: COLORS.textHighlight,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.3,
+                shadowRadius: 8,
+          }
+      }),
       elevation: 0 // Remove elevation to prevent black background artifact 
   },
   readMoreText: { 

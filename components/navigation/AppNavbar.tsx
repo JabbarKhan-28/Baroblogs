@@ -4,7 +4,7 @@ import { DEFAULT_TABS, useTabSettings } from '@/services/settingsService';
 import { usePathname, useRouter } from 'expo-router';
 import { onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface AppNavbarProps {
     activeRouteName?: string;
@@ -140,7 +140,14 @@ const styles = StyleSheet.create({
     },
     linkTextActive: {
         color: COLORS.textHighlight,
-        textShadowColor: COLORS.textHighlight,
-        textShadowRadius: 10
+        ...Platform.select({
+            web: {
+                textShadow: `0 0 10px ${COLORS.textHighlight}`
+            } as any,
+            default: {
+                textShadowColor: COLORS.textHighlight,
+                textShadowRadius: 10
+            }
+        })
     }
 });

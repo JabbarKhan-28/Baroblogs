@@ -1,4 +1,5 @@
 import { COLORS } from '@/constants/theme';
+import { auth } from '@/firebaseConfig';
 import { Ionicons } from '@expo/vector-icons';
 import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { useRouter } from 'expo-router';
@@ -42,7 +43,13 @@ export default function CustomDrawerContent(props: any) {
                         <Ionicons name="settings-outline" size={size} color={color} />
                     )}
                     labelStyle={{ fontFamily: 'System', fontWeight: '600', marginLeft: -10 }}
-                    onPress={() => router.push('/dashboard')}
+                    onPress={() => {
+                        if (auth.currentUser) {
+                            router.push('/dashboard');
+                        } else {
+                            router.push('/login');
+                        }
+                    }}
                     inactiveTintColor={COLORS.textSec}
                     inactiveBackgroundColor='transparent'
                     activeTintColor={COLORS.textHighlight}

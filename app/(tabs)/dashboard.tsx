@@ -33,6 +33,10 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState({ views: 0, subscribers: 0, articles: 0 });
   const [subscribers, setSubscribers] = useState<any[]>([]);
   const [topArticles, setTopArticles] = useState<any[]>([]);
+  
+  // Auth state
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   
   const insets = useSafeAreaInsets();
@@ -43,8 +47,13 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const unsub = auth.onAuthStateChanged((user) => {
+        setIsAuthChecked(true);
+        setCurrentUser(user);
         if (!user) {
-            router.replace('/login');
+            // Use setTimeout to ensure we don't conflict with navigation transitions
+            setTimeout(() => {
+                router.replace('/login');
+            }, 100);
         }
     });
     return () => unsub();
@@ -65,8 +74,10 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    fetchStats();
-  }, []);
+    if (currentUser) {
+        fetchStats();
+    }
+  }, [currentUser]);
 
   const fetchStats = async () => {
     try {
@@ -133,7 +144,7 @@ export default function AdminDashboard() {
     }
   };
 
-  if (loading) {
+  if (!isAuthChecked || !currentUser || loading) {
       return (
           <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
               <ActivityIndicator size="large" color={COLORS.textHighlight} />
@@ -156,7 +167,7 @@ export default function AdminDashboard() {
             styles.header,
             (isMobileWeb || Platform.OS !== 'web') && { flexDirection: 'column', alignItems: 'flex-start', gap: 20 }
         ]}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15, width: '100%' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15, width: 'auto' }}>
                 {(Platform.OS === 'android' || isMobileWeb) && (
                      <TouchableOpacity 
                         onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
@@ -165,7 +176,7 @@ export default function AdminDashboard() {
                          <Ionicons name="menu" size={32} color={COLORS.textPrim} />
                      </TouchableOpacity>
                 )}
-                <View style={{ flex: 1 }}>
+                <View>
                     <Text style={[styles.title, (isMobileWeb || Platform.OS === 'android') && { fontSize: 32 }]}>Dashboard</Text>
                     <Text style={styles.subtitle}>Welcome back, Admin</Text>
                 </View>
@@ -391,7 +402,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      marginBottom: 40
+      marginBottom: 40,
   },
   title: {
       fontSize: 42,
@@ -407,7 +418,7 @@ const styles = StyleSheet.create({
   headerActions: {
       flexDirection: 'row',
       justifyContent: 'center',
-      gap: 30
+      gap: 12
   },
   iconButton: {
       width: 44,
@@ -417,7 +428,20 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: 'rgba(17, 25, 40, 0.4)',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      ...Platform.select({
+          web: {
+              cursor: 'pointer',
+              boxShadow: `0 4px 10px ${COLORS.textHighlight}1A`, // 0.1 opacity
+              transition: 'all 0.2s ease',
+          } as any,
+          default: {
+             shadowColor: COLORS.textHighlight,
+             shadowOffset: { width: 0, height: 4 },
+             shadowOpacity: 0.1,
+             shadowRadius: 10,
+          }
+      })
   },
   statsGrid: {
       flexDirection: 'row',

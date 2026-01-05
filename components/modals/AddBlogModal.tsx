@@ -371,6 +371,9 @@ const styles = StyleSheet.create({
         maxWidth: 500,
         alignSelf: 'center',
         ...Platform.select({
+            web: {
+                boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.5)'
+            } as any,
             android: {
                 elevation: 10,
             },

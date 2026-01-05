@@ -25,12 +25,18 @@ export const useTabSettings = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const unsub = onSnapshot(doc(db, 'settings', 'tabs'), (doc) => {
-            if (doc.exists()) {
-                setTabs(doc.data() as typeof DEFAULT_TABS);
+        const unsub = onSnapshot(doc(db, 'settings', 'tabs'), 
+            (doc) => {
+                if (doc.exists()) {
+                    setTabs(doc.data() as typeof DEFAULT_TABS);
+                }
+                setLoading(false);
+            },
+            (error) => {
+                console.error("Error fetching tab settings:", error);
+                setLoading(false);
             }
-            setLoading(false);
-        });
+        );
         return () => unsub();
     }, []);
 
