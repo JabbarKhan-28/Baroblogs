@@ -24,16 +24,19 @@ export default function AppNavbar({ activeRouteName, customTabs }: AppNavbarProp
   },[]);
 
   const routes = [
-      { name: 'index', label: 'Home', path: '/' }, // Home usually stays Home? Or allow rename? User said "update the tabs name", likely meant the categories.
+      { name: 'index', label: 'Home', path: '/' },
       { name: 'dsa', label: currentTabs.dsa, path: '/dsa' },
       { name: 'infosec', label: currentTabs.infosec, path: '/infosec' },
       { name: 'network', label: currentTabs.network, path: '/network' },
       { name: 'general', label: currentTabs.general, path: '/general' },
   ];
 
+  // Add Dashboard link only if logged in
+  if (user) {
+    routes.push({ name: 'dashboard', label: 'Dashboard', path: '/dashboard' });
+  }
+
   const handleNavigate = (route: any) => {
-      // If we are in the (tabs) layout, navigate works. 
-      // But router.push works everywhere.
       router.push(route.path);
   };
 
@@ -60,30 +63,24 @@ export default function AppNavbar({ activeRouteName, customTabs }: AppNavbarProp
          <View style={styles.linksContainer}>
             {routes.map((route) => {
               const active = isActive(route);
+              const isDashboard = route.name === 'dashboard';
+
               return (
                 <TouchableOpacity
                   key={route.name}
                   onPress={() => handleNavigate(route)}
                   style={[styles.linkItem, active && styles.linkItemActive]}
                 >
-                  <Text style={[styles.linkText, active && styles.linkTextActive]}>
+                  <Text style={[
+                      styles.linkText, 
+                      active && styles.linkTextActive,
+                      isDashboard && !active && { color: COLORS.textHighlight } // Keep it highlighted even if not active
+                  ]}>
                     {route.label}
                   </Text>
                 </TouchableOpacity>
               );
             })}
-            
-            {/* Dashboard Link for Admin */}
-            {user && (
-               <TouchableOpacity
-                  onPress={() => router.push('/dashboard')}
-                  style={[styles.linkItem, pathname.includes('/dashboard') && styles.linkItemActive]}
-                >
-                  <Text style={[styles.linkText, { color: COLORS.textHighlight }, pathname.includes('/dashboard') && styles.linkTextActive]}>
-                    Dashboard
-                  </Text>
-                </TouchableOpacity>
-            )}
          </View>
       </View>
     </View>

@@ -28,7 +28,6 @@ export default function CustomTabBar({ state, descriptors, navigation }: BottomT
   if (isWeb) {
     // WEB: Top Navbar
     const routeName = state.routes[state.index].name;
-    if (routeName === 'dashboard') return null;
     return <AppNavbar activeRouteName={routeName} />;
   }
 
@@ -106,7 +105,7 @@ export default function CustomTabBar({ state, descriptors, navigation }: BottomT
                   mobileStyles.label, 
                   { color: COLORS.textHighlight }
               ]}>
-                  Admin
+                  Dashboard
               </Text>
             </TouchableOpacity>
         )}
