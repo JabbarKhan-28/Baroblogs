@@ -7,16 +7,16 @@ import { useRouter } from 'expo-router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useState } from 'react';
 import {
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  useWindowDimensions
+    ActivityIndicator,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+    useWindowDimensions
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -126,7 +126,7 @@ export default function LoginScreen() {
               Admin <Text style={styles.highlight}>Area</Text>
             </Text>
 
-            <View style={StyleSheet.flatten([styles.form, { padding: width < 400 ? 20 : 32 }])}>
+            <View style={StyleSheet.flatten([styles.form, { padding: width < 400 ? 16 : 24 }])}>
               {Platform.OS !== 'web' && (
                   <BlurView intensity={20} tint="dark" style={StyleSheet.absoluteFill} />
               )}
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     width: '100%',
     alignItems: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
     zIndex: 1
   },
   backButton: {

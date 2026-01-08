@@ -6,9 +6,9 @@ import { DEFAULT_TABS, updateTabSettings, useTabSettings } from '@/services/sett
 import { Ionicons } from '@expo/vector-icons';
 import { DrawerActions } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
-import { useNavigation, useRouter } from 'expo-router';
+import { useFocusEffect, useNavigation, useRouter } from 'expo-router';
 import { collection, getCountFromServer, getDocs, limit, orderBy, query } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
     ActivityIndicator,
     Modal,
@@ -49,15 +49,18 @@ export default function AdminDashboard() {
     const unsub = auth.onAuthStateChanged((user) => {
         setIsAuthChecked(true);
         setCurrentUser(user);
-        if (!user) {
-            // Use setTimeout to ensure we don't conflict with navigation transitions
-            setTimeout(() => {
-                router.replace('/login');
-            }, 100);
-        }
     });
     return () => unsub();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      // Only redirect to login if we have finished checking auth AND no user is present
+      if (isAuthChecked && !currentUser) {
+          router.replace('/login');
+      }
+    }, [isAuthChecked, currentUser])
+  );
 
   useEffect(() => {
       if (currentTabs) {
@@ -159,7 +162,7 @@ export default function AdminDashboard() {
       <ScrollView 
         contentContainerStyle={[
             styles.content, 
-            { paddingTop: (isWeb && !isMobileWeb) ? 120 : insets.top + 30, paddingBottom: 100 }
+            { paddingTop: (isWeb && !isMobileWeb) ? 80 : insets.top + 20, paddingBottom: 60 }
         ]}
       >
         {/* Header Section */}
@@ -393,7 +396,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primaryBg,
   },
   content: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
     maxWidth: 1200,
     alignSelf: 'center',
     width: '100%',
@@ -456,7 +459,7 @@ const styles = StyleSheet.create({
       backgroundColor: 'rgba(17, 25, 40, 0.4)', // More transparent
       borderWidth: 1,
       borderColor: 'rgba(56, 189, 248, 0.2)', // Subtle blue tint on border
-      padding: 20, // Reduced padding
+      padding: 16, // Reduced padding
       borderRadius: 24,
       flexDirection: 'row',
       alignItems: 'center',
@@ -507,7 +510,7 @@ const styles = StyleSheet.create({
   listItem: {
       flexDirection: 'row',
       alignItems: 'center',
-      padding: 16,
+      padding: 12,
       backgroundColor: 'rgba(17, 25, 40, 0.4)',
       borderRadius: 16,
       borderWidth: 1,
@@ -516,7 +519,7 @@ const styles = StyleSheet.create({
   articleRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      padding: 16,
+      padding: 12,
       backgroundColor: 'rgba(17, 25, 40, 0.4)',
       borderRadius: 16,
       borderWidth: 1,
@@ -588,7 +591,7 @@ const styles = StyleSheet.create({
       backgroundColor: 'rgba(17, 25, 40, 0.4)',
       borderWidth: 1,
       borderColor: 'rgba(255,255,255,0.08)',
-      padding: 24,
+      padding: 16,
       borderRadius: 24,
   },
   inputGroup: {

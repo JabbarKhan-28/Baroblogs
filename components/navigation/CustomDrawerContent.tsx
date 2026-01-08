@@ -3,13 +3,20 @@ import { auth } from '@/firebaseConfig';
 import { Ionicons } from '@expo/vector-icons';
 import { DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { useRouter } from 'expo-router';
-import React from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function CustomDrawerContent(props: any) {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, u => setUser(u));
+    return () => unsub();
+  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.primaryBg }}>
@@ -35,26 +42,22 @@ export default function CustomDrawerContent(props: any) {
         <View style={styles.itemsContainer}>
             <DrawerItemList {...props} />
             
-            {/* Custom Admin Item */}
-            <View style={{ marginTop: 10, borderTopWidth: 1, borderTopColor: COLORS.border, paddingTop: 10 }}>
-                <DrawerItem
-                    label="Admin Dashboard"
-                    icon={({ color, size }) => (
-                        <Ionicons name="settings-outline" size={size} color={color} />
-                    )}
-                    labelStyle={{ fontFamily: 'System', fontWeight: '600', marginLeft: -10 }}
-                    onPress={() => {
-                        if (auth.currentUser) {
-                            router.push('/dashboard');
-                        } else {
-                            router.push('/login');
-                        }
-                    }}
-                    inactiveTintColor={COLORS.textSec}
-                    inactiveBackgroundColor='transparent'
-                    activeTintColor={COLORS.textHighlight}
-                />
-            </View>
+            {/* Custom Admin Item - Only show if logged in */}
+            {user && (
+                <View style={{ marginTop: 10, borderTopWidth: 1, borderTopColor: COLORS.border, paddingTop: 10 }}>
+                    <DrawerItem
+                        label="Admin Dashboard"
+                        icon={({ color, size }) => (
+                            <Ionicons name="settings-outline" size={size} color={color} />
+                        )}
+                        labelStyle={{ fontFamily: 'System', fontWeight: '600', marginLeft: -10 }}
+                        onPress={() => router.push('/dashboard')}
+                        inactiveTintColor={COLORS.textSec}
+                        inactiveBackgroundColor='transparent'
+                        activeTintColor={COLORS.textHighlight}
+                    />
+                </View>
+            )}
         </View>
 
       </DrawerContentScrollView>

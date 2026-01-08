@@ -213,7 +213,7 @@ export default function BlogFeed({ categoryFilter = 'all', showSearch = true, he
   const { width, isMobileWeb, isWeb } = useIsMobile();
   const isDesktopWeb = isWeb && !isMobileWeb;
 
-  const headerPaddingTop = (Platform.OS === 'web' && width >= 768) ? 140 : insets.top + 20;
+  const headerPaddingTop = (Platform.OS === 'web' && width >= 768) ? 100 : insets.top + 15;
 
   let cardStyle = {};
   if (Platform.OS === 'web') {
@@ -228,7 +228,7 @@ export default function BlogFeed({ categoryFilter = 'all', showSearch = true, he
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={StyleSheet.flatten([styles.contentContainer, { paddingHorizontal: width < 400 ? 15 : 20, paddingTop: headerPaddingTop, paddingBottom: insets.bottom + 100 }])} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={StyleSheet.flatten([styles.contentContainer, { paddingHorizontal: width < 400 ? 12 : 16, paddingTop: headerPaddingTop, paddingBottom: insets.bottom + 60 }])} showsVerticalScrollIndicator={false}>
 
         {/* Background Glows */}
         <BackgroundGlows top bottom />
@@ -470,8 +470,8 @@ const styles = StyleSheet.create({
       borderRadius: 24,
       borderWidth: 1,
       borderColor: 'rgba(255,255,255,0.1)',
-      padding: 24,
-      marginBottom: 20,
+      padding: 20,
+      marginBottom: 16,
       overflow: 'hidden', // Essential for blur
       ...Platform.select({
           web: {

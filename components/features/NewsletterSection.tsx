@@ -24,6 +24,8 @@ export default function NewsletterSection() {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
 
+    if (Platform.OS !== 'web') return null;
+
     const handleSubscribe = async () => {
         if (!email.trim() || !email.includes('@')) {
             if (Platform.OS === 'web') {
@@ -146,10 +148,9 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'rgba(17, 25, 40, 0.7)',
         borderRadius: 24,
-        paddingVertical: 30,
-        paddingBottom: 80,
+        paddingVertical: 20,
         paddingHorizontal: 20,
-        marginVertical: 40,
+        marginVertical: 20,
         marginHorizontal: 10,
         borderWidth: 1,
         borderColor: COLORS.border,
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
                 width: '100%',
                 maxWidth: 1000,
                 alignSelf: 'center',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
             } as any,
             default: {
                 shadowColor: '#000',
